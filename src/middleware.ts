@@ -25,6 +25,7 @@ export async function middleware(request: NextRequest) {
 //configurar las rutas que requieren autenticacion
 export const config = {
     matcher: [
-        //'/api/protected/:path*', //proteger todas las rutas bajo /api/protected/
+        '/api/products/:path*', //proteger todas las rutas bajo /api/protected/
+        '/api/categories/:path*',
     ],
 };
