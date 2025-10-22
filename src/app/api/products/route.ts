@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import prisma  from "@/lib/prisma";
+import { revalidatePath } from 'next/cache';
 
 export async function GET(request: Request) {
     try {
@@ -31,6 +32,8 @@ export async function POST(request: Request) {
                 categoryId,
             }
         });
+        // Le decimos a Next.js que los datos de esta página están obsoletos.
+        revalidatePath('/dashboard/products');
         return NextResponse.json(newProduct, { status: 201 });
     } catch (error) {
         console.error(error);

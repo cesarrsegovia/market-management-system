@@ -1,4 +1,7 @@
 import prisma from '@/lib/prisma';
+import Link from 'next/link';
+import ProductActions from './components/ProductActions';
+
 
 // 1. Esta función se ejecuta en el SERVIDOR
 async function getProducts() {
@@ -23,9 +26,11 @@ export default async function ProductsPage() {
       
       {/* Aquí irá un botón para "Crear Producto Nuevo" más adelante */}
       <div className="mb-4">
-        <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-          Crear Nuevo Producto
-        </button>
+        <Link href="/dashboard/products/new">
+          <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+            Crear Nuevo Producto
+          </button>
+        </Link>
       </div>
 
       <div className="overflow-x-auto">
@@ -46,8 +51,7 @@ export default async function ProductsPage() {
                 <td className="py-2 px-4">{product.category.name}</td>
                 <td className="py-2 px-4">
                   {/* Aquí irán los botones de "Editar" y "Eliminar" */}
-                  <button className="text-blue-500 hover:underline mr-2">Editar</button>
-                  <button className="text-red-500 hover:underline">Eliminar</button>
+                  <ProductActions productId={product.id} />
                 </td>
               </tr>
             ))}
