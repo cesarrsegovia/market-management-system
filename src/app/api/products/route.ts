@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import prisma  from "@/lib/prisma";
+import prisma from "@/lib/prisma";
 import { revalidatePath } from 'next/cache';
 
 export async function GET(request: Request) {
@@ -30,7 +30,17 @@ export async function POST(request: Request) {
                 description,
                 price,
                 categoryId,
-            }
+                // agregamos la creación del inventario asociado
+                inventory: {
+                    create: {
+                        quantity: 0, // Inicia el stock en 0
+                    },
+                },
+            },
+            // También queremos que la respuesta incluya el nuevo inventario
+            include: {
+                inventory: true,
+            },
         });
         // Le decimos a Next.js que los datos de esta página están obsoletos.
         revalidatePath('/dashboard/products');

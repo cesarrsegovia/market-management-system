@@ -44,6 +44,14 @@ model Product {
   sku         String   @unique @default(cuid()) // Stock Keeping Unit
   categoryId  Int
   category    Category @relation(fields: [categoryId], references: [id])
+  inventory   Inventory?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+
+model Inventory {
+  id        Int      @id @default(autoincrement())
+  quantity  Int      @default(0) // Cantidad en stock
+  productId Int      @unique // 1. Clave foránea única
+  product   Product  @relation(fields: [productId], references: [id])
 }
