@@ -19,7 +19,8 @@ export async function middleware(request: NextRequest) {
     errorResponse = { message: 'Autenticación requerida.', status: 401 };
   } else {
     try {
-      tokenPayload = await jwtVerify(token, secret);
+      const { payload } = await jwtVerify(token, secret);
+      tokenPayload = payload; // Guardamos el payload completo
     } catch (error) {
       errorResponse = { message: 'Token inválido o expirado.', status: 401 };
     }
@@ -40,10 +41,17 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  // 5. (Opcional pero recomendado) Añadir lógica de Roles/Autorización
-  if (tokenPayload && isApiRoute) {
-    // Aquí podríamos verificar el rol del usuario (ej. tokenPayload.role)
-    // y denegar el acceso si no es 'ADMIN' para ciertas rutas POST/PUT/DELETE.
+  // Esta lógica se ejecuta SOLO SI el token es válido (no hubo errorResponse)
+  
+  // Verificamos si es una acción de escritura (POST, PUT, DELETE)
+  const isApiWriteAction = (request.method === 'POST' || request.method === 'PUT' || request.method === 'DELETE');
+
+  // Si es una ruta de API, es una acción de escritura, y el rol NO es ADMIN
+  if (isApiRoute && isApiWriteAction && tokenPayload?.role !== 'ADMIN') {
+    return NextResponse.json(
+      { message: 'Acceso denegado: Se requiere rol de Administrador.' },
+      { status: 403 } // 403 Forbidden
+    );
   }
 
   // Si todo está bien, dejamos pasar la petición
@@ -56,7 +64,7 @@ export const config = {
     /* Rutas de API protegidas */
     '/api/products/:path*',
     '/api/categories/:path*',
-    
+
     /* Rutas de páginas protegidas */
     '/dashboard/:path*'
   ],

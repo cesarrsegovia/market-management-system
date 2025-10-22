@@ -1,0 +1,37 @@
+import Link from 'next/link';
+
+export default function DashboardLayout({
+  children, // 1. 'children' es la página que se está mostrando
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="flex h-screen bg-gray-100">
+      
+      {/* 2. Barra Lateral de Navegación */}
+      <aside className="w-56 bg-gray-800 text-white p-4">
+        <h2 className="text-xl font-bold mb-4">Market Admin</h2>
+        <nav>
+          <ul>
+            <li className="mb-2">
+              <Link href="/dashboard">
+                <span className="block p-2 rounded hover:bg-gray-700">Estadísticas</span>
+              </Link>
+            </li>
+            <li className="mb-2">
+              <Link href="/dashboard/products">
+                <span className="block p-2 rounded hover:bg-gray-700">Productos</span>
+              </Link>
+            </li>
+            {/* Próximamente podríamos añadir más enlaces aquí */}
+          </ul>
+        </nav>
+      </aside>
+
+      {/* 3. Contenido Principal de la Página */}
+      <main className="flex-1 overflow-y-auto p-6">
+        {children}
+      </main>
+    </div>
+  );
+}

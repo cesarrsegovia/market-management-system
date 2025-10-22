@@ -46,9 +46,9 @@ export default async function ProductsPage() {
           <tbody>
             {products.map((product) => (
               <tr key={product.id} className="border-b hover:bg-gray-50">
-                <td className="py-2 px-4">{product.name}</td>
-                <td className="py-2 px-4">${product.price.toFixed(2)}</td>
-                <td className="py-2 px-4">{product.category.name}</td>
+                <td className="py-2 px-4 text-black">{product.name}</td>
+                <td className="py-2 px-4 text-black">${product.price.toFixed(2)}</td>
+                <td className="py-2 px-4 text-black">{product.category.name}</td>
                 <td className="py-2 px-4">
                   {/* Aquí irán los botones de "Editar" y "Eliminar" */}
                   <ProductActions productId={product.id} />
