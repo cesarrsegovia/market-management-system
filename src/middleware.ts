@@ -66,6 +66,8 @@ export const config = {
     '/api/categories/:path*',
 
     /* Rutas de páginas protegidas */
-    '/dashboard/:path*'
+    '/dashboard/:path*',
+    '/api/sales/:path*',
+    '/api/seed/:path*'
   ],
 };

@@ -8,6 +8,7 @@ async function getProducts() {
   const products = await prisma.product.findMany({
     include: {
       category: true, // Incluimos la categoría relacionada
+      inventory: true, // Incluimos la información de inventario
     },
     orderBy: {
       createdAt: 'desc', // Ordenamos por fecha de creación descendente
@@ -22,7 +23,7 @@ export default async function ProductsPage() {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Gestión de Productos</h1>
+      <h1 className="text-2xl font-bold mb-4 text-black">Gestión de Productos</h1>
       
       {/* Aquí irá un botón para "Crear Producto Nuevo" más adelante */}
       <div className="mb-4">
@@ -40,6 +41,7 @@ export default async function ProductsPage() {
               <th className="py-2 px-4 text-left">Nombre</th>
               <th className="py-2 px-4 text-left">Precio</th>
               <th className="py-2 px-4 text-left">Categoría</th>
+              <th className="py-2 px-4 text-left">Stock</th>
               <th className="py-2 px-4 text-left">Acciones</th>
             </tr>
           </thead>
@@ -49,6 +51,7 @@ export default async function ProductsPage() {
                 <td className="py-2 px-4 text-black">{product.name}</td>
                 <td className="py-2 px-4 text-black">${product.price.toFixed(2)}</td>
                 <td className="py-2 px-4 text-black">{product.category.name}</td>
+                <td className="py-2 px-4 text-black">{product.inventory?.quantity ?? 'N/A'}</td>
                 <td className="py-2 px-4">
                   {/* Aquí irán los botones de "Editar" y "Eliminar" */}
                   <ProductActions productId={product.id} />

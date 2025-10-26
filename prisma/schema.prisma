@@ -28,6 +28,7 @@ model User {
   role      Role     @default(CASHIER)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  sales     Sale[] // Un usuario puede tener muchas ventas
 }
 
 model Category {
@@ -47,6 +48,7 @@ model Product {
   inventory   Inventory?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  saleItems SaleItem[] // Un producto puede estar en muchas líneas de venta
 }
 
 model Inventory {
@@ -54,4 +56,29 @@ model Inventory {
   quantity  Int      @default(0) // Cantidad en stock
   productId Int      @unique // 1. Clave foránea única
   product   Product  @relation(fields: [productId], references: [id])
+}
+model Sale {
+  id        Int        @id @default(autoincrement())
+  total     Float
+  createdAt DateTime   @default(now())
+  
+  // Relación: Qué usuario hizo la venta
+  userId    Int
+  user      User       @relation(fields: [userId], references: [id])
+  
+  // Relación: Qué items se vendieron en esta venta
+  items     SaleItem[]
+}
+model SaleItem {
+  id        Int   @id @default(autoincrement())
+  quantity  Int
+  price     Float // Precio del producto en el momento de la venta
+  
+  // Relación: A qué recibo pertenece este item
+  saleId    Int
+  sale      Sale  @relation(fields: [saleId], references: [id])
+  
+  // Relación: Qué producto se vendió
+  productId Int
+  product   Product @relation(fields: [productId], references: [id])
 }

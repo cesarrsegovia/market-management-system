@@ -4,7 +4,7 @@ import prisma from '@/lib/prisma';
 //funcion para obtener un producto por su ID
 export async function GET(request: Request, { params }: { params: { id: string } }) {
     try {
-        const  id  = parseInt(params.id);
+        const id = parseInt(params.id);
         const product = await prisma.product.findUnique({
             where: { id },
             include: { category: true }, //tambien traemos la categoria
@@ -24,7 +24,8 @@ export async function PUT(request: Request, { params }: { params: { id: string }
     try {
         const id = parseInt(params.id);
         const body = await request.json();
-        const { name, description, price, categoryId } = body;
+        const { name, description, price, categoryId, quantity } = body;
+        const numericQuantity = quantity !== undefined ? parseInt(quantity) : undefined;
 
         const updatedProduct = await prisma.product.update({
             where: { id },
@@ -33,6 +34,20 @@ export async function PUT(request: Request, { params }: { params: { id: string }
                 description,
                 price,
                 categoryId,
+                ...(numericQuantity !== undefined && {
+                    inventory: {
+                        upsert: {
+                            // Si no existe, crea el registro de inventario
+                            create: {
+                                quantity: numericQuantity,
+                            },
+                            // Si ya existe, actualiza el registro de inventario
+                            update: {
+                                quantity: numericQuantity,
+                            },
+                        },
+                    },
+                })
             }
         })
         return NextResponse.json(updatedProduct);

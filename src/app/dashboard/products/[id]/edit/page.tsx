@@ -24,6 +24,7 @@ export default function EditProductPage({ params }: EditProductPageProps) {
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
   const [categoryId, setCategoryId] = useState('');
+  const [quantity, setQuantity] = useState('');
   const [categories, setCategories] = useState<Category[]>([]);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(true);
@@ -51,6 +52,7 @@ export default function EditProductPage({ params }: EditProductPageProps) {
         setDescription(product.description || '');
         setPrice(product.price.toString());
         setCategoryId(product.categoryId.toString());
+        setQuantity(product.inventory?.quantity.toString() ?? '0');
         
         // Cargamos las categorías en el <select>
         setCategories(categoriesRes.data);
@@ -82,6 +84,7 @@ export default function EditProductPage({ params }: EditProductPageProps) {
         description,
         price: parseFloat(price),
         categoryId: parseInt(categoryId),
+        quantity: parseInt(quantity),
       });
       
       router.push('/dashboard/products'); // Volvemos a la lista
@@ -102,30 +105,42 @@ export default function EditProductPage({ params }: EditProductPageProps) {
   // 4. El formulario (similar a 'new', pero con 'value' en los campos)
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Editar Producto</h1>
+      <h1 className="text-2xl font-bold mb-4 text-black">Editar Producto</h1>
       <form onSubmit={handleSubmit} className="bg-white p-6 rounded shadow-md max-w-lg">
         {error && <p className="text-red-500 mb-4">{error}</p>}
         
         <div className="mb-4">
-          <label className="block mb-1">Nombre</label>
+          <label className="block mb-1 text-black">Nombre</label>
           <input type="text" value={name} onChange={(e) => setName(e.target.value)}
             className="w-full px-3 py-2 border rounded" required />
         </div>
 
         <div className="mb-4">
-          <label className="block mb-1">Descripción</label>
+          <label className="block mb-1 text-black">Descripción</label>
           <textarea value={description} onChange={(e) => setDescription(e.target.value)}
             className="w-full px-3 py-2 border rounded" />
         </div>
 
         <div className="mb-4">
-          <label className="block mb-1">Precio</label>
+          <label className="block mb-1 text-black">Precio</label>
           <input type="number" step="0.01" value={price} onChange={(e) => setPrice(e.target.value)}
             className="w-full px-3 py-2 border rounded" required />
         </div>
 
         <div className="mb-4">
-          <label className="block mb-1">Categoría</label>
+          <label className="block mb-1 text-black">Stock (Cantidad)</label>
+          <input
+            type="number"
+            step="1" // Solo números enteros
+            value={quantity}
+            onChange={(e) => setQuantity(e.target.value)}
+            className="w-full px-3 py-2 border rounded"
+            required
+          />
+        </div>
+
+        <div className="mb-4">
+          <label className="block mb-1 text-black">Categoría</label>
           <select value={categoryId} onChange={(e) => setCategoryId(e.target.value)}
             className="w-full px-3 py-2 border rounded" required >
             <option value="" disabled>Selecciona una categoría</option>
