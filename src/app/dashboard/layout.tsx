@@ -23,7 +23,11 @@ export default function DashboardLayout({
                 <span className="block p-2 rounded hover:bg-gray-700">Productos</span>
               </Link>
             </li>
-            {/* Próximamente podríamos añadir más enlaces aquí */}
+            <li className="mb-2">
+              <Link href="/dashboard/sales">
+                <span className="block p-2 rounded hover:bg-gray-700">Historial Ventas</span>
+              </Link>
+            </li>
           </ul>
         </nav>
       </aside>
