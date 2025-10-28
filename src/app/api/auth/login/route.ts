@@ -38,7 +38,10 @@ export async function POST(request: Request) {
 
         // 4. Devolvemos una respuesta exitosa y añadimos el encabezado 'Set-Cookie'
         return NextResponse.json(
-            { message: 'Login exitoso' },
+            { message: 'Login exitoso',
+                email: user.email,
+                role: user.role
+             },
             {
                 status: 200,
                 headers: { 'Set-Cookie': cookie },

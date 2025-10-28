@@ -22,6 +22,7 @@ export async function middleware(request: NextRequest) {
       const { payload } = await jwtVerify(token, secret);
       tokenPayload = payload; // Guardamos el payload completo
     } catch (error) {
+      console.error('Error verificando el token JWT:', error);
       errorResponse = { message: 'Token inválido o expirado.', status: 401 };
     }
   }
