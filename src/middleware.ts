@@ -68,6 +68,8 @@ export const config = {
     /* Rutas de páginas protegidas */
     '/dashboard/:path*',
     '/api/sales/:path*',
-    '/api/seed/:path*'
+    '/api/seed/:path*',
+    '/dashboard/:path*',
+    '/point-of-sale'
   ],
 };
