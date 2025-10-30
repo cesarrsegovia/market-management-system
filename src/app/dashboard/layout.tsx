@@ -1,11 +1,14 @@
 import Link from 'next/link';
 import Header from './products/components/Header';
+import { getServerSideUser } from '@/lib/auth';
 
-export default function DashboardLayout({
+export default async function DashboardLayout({
   children, // 1. 'children' es la página que se está mostrando
 }: {
   children: React.ReactNode;
 }) {
+  const user = await getServerSideUser(); // 3. Obtener el payload del usuario
+  const userRole = user?.role;// Obtener el rol
   return (
     <div className="flex flex-col h-screen bg-gray-100">
       <Header />
@@ -31,6 +34,14 @@ export default function DashboardLayout({
                 <span className="block p-2 rounded hover:bg-gray-700">Historial Ventas</span>
               </Link>
             </li>
+            {/* 4. Mostrar solo si el rol es ADMIN */}
+              {userRole === 'ADMIN' && (
+                <li className="mb-2">
+                  <Link href="/dashboard/users">
+                    <span className="block p-2 rounded hover:bg-gray-700">Usuarios</span>
+                  </Link>
+                </li>
+                )}
           </ul>
         </nav>
       </aside>

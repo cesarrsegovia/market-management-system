@@ -3,8 +3,19 @@ import type { NextRequest } from 'next/server';
 import { jwtVerify } from 'jose';
 
 // 1. Definimos las rutas que queremos proteger
-const protectedApiRoutes = ['/api/products/:path*', '/api/categories/:path*'];
-const protectedPageRoutes = ['/dashboard/:path*'];
+const protectedApiRoutes = [
+  '/api/products/:path*',
+  '/api/categories/:path*',
+  '/api/sales/:path*',
+  '/api/seed/:path*',
+  '/api/users/:path*',
+];
+const protectedPageRoutes = ['/dashboard/:path*', '/point-of-sale'];
+
+const adminOnlyApiRoutes = [
+  '/api/users/:path*',
+  '/api/seed/:path*',
+];
 
 export async function middleware(request: NextRequest) {
   // 2. Obtenemos el token de la cookie 'auth_token'
@@ -46,15 +57,17 @@ export async function middleware(request: NextRequest) {
   
   // Verificamos si es una acción de escritura (POST, PUT, DELETE)
   const isApiWriteAction = (request.method === 'POST' || request.method === 'PUT' || request.method === 'DELETE');
-
-  // Si es una ruta de API, es una acción de escritura, y el rol NO es ADMIN
-  if (isApiRoute && isApiWriteAction && tokenPayload?.role !== 'ADMIN') {
+  const isAdminOnlyRoute = adminOnlyApiRoutes.some(route => new RegExp(route.replace(':path*', '.*')).test(request.nextUrl.pathname));
+  // 2. Definimos qué requiere ser admin:
+  // (Cualquier acción de escritura) O (Cualquier acceso a una ruta de admin)
+  const requiresAdmin = (isApiRoute && isApiWriteAction) || isAdminOnlyRoute;
+  // 3. Verificamos el permiso
+  if (requiresAdmin && tokenPayload?.role !== 'ADMIN') {
     return NextResponse.json(
       { message: 'Acceso denegado: Se requiere rol de Administrador.' },
       { status: 403 } // 403 Forbidden
     );
   }
-
   // Si todo está bien, dejamos pasar la petición
   return NextResponse.next();
 }
@@ -70,7 +83,8 @@ export const config = {
     '/dashboard/:path*',
     '/api/sales/:path*',
     '/api/seed/:path*',
+    '/api/users/:path*',
     '/dashboard/:path*',
-    '/point-of-sale'
+    '/point-of-sale',
   ],
 };
