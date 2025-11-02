@@ -35,7 +35,16 @@ export default function LoginPage() {
         console.log('LoginPage: Llamando a auth.login con:', { email: userEmailFromApi, role: userRoleFromApi });
         auth.login(userEmailFromApi, userRoleFromApi); // Actualizar contexto
         console.log('LoginPage: auth.login llamado.');
-        router.push('/dashboard'); // Redirigir
+        if (userRoleFromApi === 'ADMIN') {
+          console.log('Redirigiendo a /dashboard (ADMIN)');
+          router.push('/dashboard');
+        } else if (userRoleFromApi === 'CASHIER') {
+          console.log('Redirigiendo a /point-of-sale (CASHIER)');
+          window.location.href = '/point-of-sale';
+        } else {
+          console.log('Redirigiendo a / (DEFAULT)');
+          router.push('/');
+        }
       } else {
         // Este error ya no debería ocurrir si la API envía email y role
         console.error("LoginPage: Email o Role no encontrados en la respuesta directa.");

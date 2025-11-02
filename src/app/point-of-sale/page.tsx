@@ -31,7 +31,7 @@ export default function PointOfSalePage() {
             setIsLoading(true);
             setError('');
             try {
-                const response = await axios.get('/api/products');
+                const response = await axios.get('/api/products', {withCredentials: true});
                 setProducts(response.data);
             } catch (err) {
                 console.error("Error al cargar productos:", err);

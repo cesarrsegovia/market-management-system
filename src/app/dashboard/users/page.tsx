@@ -26,7 +26,13 @@ export default async function UsersPage() {
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4 text-black">Gestión de Usuarios</h1>
-
+      <div className="mb-4">
+        <Link href="/dashboard/users/new">
+          <button className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+            Crear Nuevo Usuario
+          </button>
+        </Link>
+      </div>
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white">
 
