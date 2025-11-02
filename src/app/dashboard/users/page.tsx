@@ -1,6 +1,6 @@
 import prisma from '@/lib/prisma';
 import { format } from 'date-fns';
-
+import Link from 'next/link';
 // Esta página es un Server Component, pero la protegeremos en el layout.
 // Por ahora, buscará los datos directamente.
 
@@ -25,10 +25,11 @@ export default async function UsersPage() {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Gestión de Usuarios</h1>
+      <h1 className="text-2xl font-bold mb-4 text-black">Gestión de Usuarios</h1>
 
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white">
+
           <thead className="bg-gray-800 text-white">
             <tr>
               <th className="py-2 px-4 text-left">Email</th>
@@ -48,7 +49,10 @@ export default async function UsersPage() {
                   {format(new Date(user.createdAt), 'dd/MM/yyyy')}
                 </td>
                 <td className="py-2 px-4">
-                  <button className="text-blue-500 hover:underline">Editar</button>
+                  {/* 2. Envolvemos el botón en un Link */}
+                  <Link href={`/dashboard/users/${user.id}/edit`}>
+                    <button className="text-blue-500 hover:underline">Editar</button>
+                  </Link>
                 </td>
               </tr>
             ))}
